@@ -118,6 +118,7 @@
       return checkBrowser().then(() => {
         return getUserMedia({ audio: true }).then((stream) => {
           audioElement.srcObject = stream;
+          audioElement.muted = true;
           return startVolume(stream);
         }).catch((err) => {
           if (err.name === 'NotFoundError') {
