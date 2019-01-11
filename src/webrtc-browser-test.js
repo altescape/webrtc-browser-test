@@ -1,5 +1,15 @@
 (function() {
 
+  let str = '';
+
+  const setStream = function(stream) {
+    str = stream;
+  };
+
+  const stream = function() {
+    return str;
+  };
+
   const ParameterError = function(message) {
     this.name = 'ParameterError';
     this.message = (message || '');
@@ -98,6 +108,9 @@
     const startVideo = function() {
       return checkBrowser().then(() => {
         return getUserMedia({ video: true }).then((stream) => {
+          setStream(stream);
+          window.str = stream;
+          console.log('ar', stream);
           videoElement.srcObject = stream;
           return Promise.resolve();
         }).catch((err) => {
@@ -117,6 +130,7 @@
     const startAudio = function() {
       return checkBrowser().then(() => {
         return getUserMedia({ audio: true }).then((stream) => {
+          setStream(stream);
           audioElement.srcObject = stream;
           audioElement.muted = true;
           return startVolume(stream);
@@ -133,7 +147,6 @@
         });
       });
     };
-
 
     const createVolumeListener = function(audioContext, cb) {
       const processor = audioContext.createScriptProcessor(2048, 1, 1);
@@ -188,11 +201,19 @@
       });
     };
 
+    const stopAll = function() {
+      return checkBrowser().then(() => {
+        stream().getTracks().forEach(track => track.stop());
+      })
+    }
+
     return {
       checkBrowser,
       startVideo,
       startAudio,
-      startAll
+      startAll,
+      stream,
+      stopAll
     };
   };
 
