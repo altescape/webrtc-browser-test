@@ -110,7 +110,6 @@
         return getUserMedia({ video: true }).then((stream) => {
           setStream(stream);
           window.str = stream;
-          console.log('ar', stream);
           videoElement.srcObject = stream;
           return Promise.resolve();
         }).catch((err) => {
